@@ -4,6 +4,8 @@ Streamlit app: loads diabetes_risk.csv, explores it, and trains a model
 to predict diabetes_risk (Low / Moderate / High) from patient attributes.
 """
 
+import os
+
 import pandas as pd  # type: ignore[reportMissingModuleSource]
 import plotly.express as px # type: ignore[reportMissingModuleSource]
 import plotly.graph_objects as go # type: ignore[reportMissingModuleSource]
@@ -99,19 +101,25 @@ def heatmap_with_text(z_color, x_labels, y_labels, stops, zmin, zmax, text_value
 # ----------------------------------------------------------------------------
 # Data loading
 # ----------------------------------------------------------------------------
-@st.cache_data
+@st.cache_data(ttl=600)
 def load_data():
-    df = pd.read_csv("diabetes_risk.csv")
-    return df
+    database_url = os.environ.get("DATABASE_URL")
+    if database_url:
+        from sqlalchemy import create_engine  # type: ignore[reportMissingModuleSource]
+        engine = create_engine(database_url)
+        return pd.read_sql("SELECT * FROM diabetes_risk", engine)
+    return pd.read_csv("diabetes_risk.csv")
 
 
 df = load_data()
+data_source = "Supabase (Postgres)" if os.environ.get("DATABASE_URL") else "local CSV"
 
 st.title("Diabetes Risk Explorer")
 st.caption(
     "Exploratory analysis and risk prediction over a synthetic diabetes-risk "
     "dataset of 15,000 patients."
 )
+st.caption(f"Data source: {data_source}")
 
 tab_overview, tab_eda, tab_predict = st.tabs(
     ["📋 Data Overview", "📊 Exploratory Analysis", "🩺 Predict Risk"]
