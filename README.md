@@ -2,6 +2,9 @@
 
 This is a Streamlit web application designed for exploratory data analysis (EDA) and risk prediction over a synthetic dataset of 15,000 patients. It explores patient attributes and trains a machine learning model to predict diabetes risk levels (Low, Moderate, or High).
 
+## Live link 
+[Diabetes Risk](https://baguirr1--diabetes-risk-dashboard-run.modal.run/)
+
 ## App Features
 The dashboard is separated into three intuitive tabs:
 * **📋 Data Overview**: Displays high-level dataset metrics (row and column counts), highlights missing values, and provides a numeric summary and sample rows for quick inspection.
